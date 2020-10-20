@@ -1,0 +1,24 @@
+{
+  "name": "basic_eris_handler",
+  "version": "1.0.0",
+  "description": "lol just a cmd handler with eris",
+  "main": "src/bot.js",
+  "scripts": {
+    "test": "src/bot.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mafia-boss-lvl-420/basic_eris_handler.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Mafia-boss-lvl-420/basic_eris_handler/issues"
+  },
+  "homepage": "https://github.com/Mafia-boss-lvl-420/basic_eris_handler#readme",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "eris": "github:Mafia-boss-lvl-420/eris",
+    "mongoose": "^5.10.9"
+  }
+}
