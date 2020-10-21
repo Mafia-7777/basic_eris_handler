@@ -2,6 +2,7 @@ const cooldown = new Map();
 const devs = ["695520751842885672"]
 
 const Server = require('../Schemas/Guild');
+const User = require('../Schemas/users');
 const data = {};
 
 function perm_check(userID, perm, msg){
@@ -60,34 +61,47 @@ module.exports.msg = async (bot, msg) => {
     if(msg.channel.nsfw == false && cmd.nsfw == true) return msg.channel.sendNSFW();
     if(cmd.dev == true && !devs.includes(authorID)) return msg.channel.sendErr('This is a dev only command.');
     if(cmd.owner == true && !authorID == process.env.OWNER) return msg.channel.sendErr('This is a owner only command.');
-    
-    
-    let needed_perms = [];
-    let needed_perms_bot = [];
-    if(cmd.channelPermCheck == true){
-        await cmd.memberPerm.forEach(async perm => {
-            if(perm_check_channel(authorID, perm, msg) == false) needed_perms.push(perm);
-        });
-    }else{
-        await cmd.memberPerm.forEach(async perm => {
-            if(perm_check(authorID, perm, msg) == false) needed_perms.push(perm);
-        });
+    if(cmd.caryData == true){
+        data.author = await User.findOne({id: authorID + guildID});
+        if(!data.author){
+            await new User({id: authorID + guildID}).save();
+            data.author = await User.findOne({id: authorID + guildID});
+        };
     };
     
-    if(cmd.channelPermCheck == true){
-        await cmd.botPerms.forEach(async perm => {
-            if(perm_check_channel(bot.user.id, perm, msg) == false) needed_perms_bot.push(perm);
-        });
-    }else{
-        await cmd.botPerms.forEach(async perm => {
-            if(perm_check(bot.user.id, perm, msg) == false) needed_perms_bot.push(perm);
-        });
-    };
-
-    if(!needed_perms.length == 0) return msg.channel.memberPerms(needed_perms.join(", "));
-    if(!needed_perms_bot.length == 0) return msg.channel.botPerms(needed_perms_bot.join(", "));
+    if(msg.channel.guild){
+        let needed_perms = [];
+        let needed_perms_bot = [];
+        if(cmd.channelPermCheck == true){
+            await cmd.memberPerm.forEach(async perm => {
+                if(perm_check_channel(authorID, perm, msg) == false) needed_perms.push(perm);
+            });
+        }else{
+            await cmd.memberPerm.forEach(async perm => {
+                if(perm_check(authorID, perm, msg) == false) needed_perms.push(perm);
+            });
+        };
+        
+        if(cmd.channelPermCheck == true){
+            await cmd.botPerms.forEach(async perm => {
+                if(perm_check_channel(bot.user.id, perm, msg) == false) needed_perms_bot.push(perm);
+            });
+        }else{
+            await cmd.botPerms.forEach(async perm => {
+                if(perm_check(bot.user.id, perm, msg) == false) needed_perms_bot.push(perm);
+            });
+        };
     
+        if(!needed_perms.length == 0) return msg.channel.memberPerms(needed_perms.join(", "));
+        if(!needed_perms_bot.length == 0) return msg.channel.botPerms(needed_perms_bot.join(", "));
+    }
 
+    if(cmd.ignoreArgs == true){
+        if(args.length - 1 < cmd.minArgs && args[0] == "") return msg.channel.sendErr(`Command args incorrect, \`\`\`  <prefix>${cmd.usage}  \`\`\` <> = required, [] = optional`)
+        if(args.length > cmd.maxArgs && !args[0] == "") return msg.channel.sendErr(`Command args incorrect, \`\`\`  <prefix>${cmd.usage}  \`\`\` <> = required, [] = optional`)
+    }
+    
+    
 
     let user_cooldown = await cooldown.get(`ID=${authorID}CMD=${cmd.name}`);
     if(user_cooldown){
@@ -104,5 +118,5 @@ module.exports.msg = async (bot, msg) => {
     
 
 
-    try{ cmd.run(bot, msg, args) }catch(e){ console.log(e) };
+    try{ cmd.run(bot, msg, args, data) }catch(e){ console.log(e) };
 };
