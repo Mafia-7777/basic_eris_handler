@@ -96,9 +96,9 @@ module.exports.msg = async (bot, msg) => {
         if(!needed_perms_bot.length == 0) return msg.channel.botPerms(needed_perms_bot.join(", "));
     }
 
-    if(cmd.ignoreArgs == true){
-        if(args.length - 1 < cmd.minArgs && args[0] == "") return msg.channel.sendErr(`Command args incorrect, \`\`\`  <prefix>${cmd.usage}  \`\`\` <> = required, [] = optional`)
-        if(args.length > cmd.maxArgs && !args[0] == "") return msg.channel.sendErr(`Command args incorrect, \`\`\`  <prefix>${cmd.usage}  \`\`\` <> = required, [] = optional`)
+    if(cmd.ignoreArgs == false){
+        if(cmd.ignoreMinArgs == false && args.length - 1 < cmd.minArgs && args[0] == "") return msg.channel.sendErr(`Command args incorrect, \`\`\`  <prefix>${cmd.usage}  \`\`\` <> = required, [] = optional`)
+        if(cmd.ignoreMinArgs == false && args.length > cmd.maxArgs && !args[0] == "") return msg.channel.sendErr(`Command args incorrect, \`\`\`  <prefix>${cmd.usage}  \`\`\` <> = required, [] = optional`)
     }
     
     
