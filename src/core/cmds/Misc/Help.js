@@ -10,12 +10,17 @@ module.exports = {
     channelPermCheck: true,
     allowInDm: false,
     nsfw: false,
-    dev: true,
+    dev: false,
     owner: false,
+    caryData: true,
 
     cooldown: 1500,
 
-    run: async (bot, msg, args) => {
+    minArgs: 0,
+    maxArgs: 1,
+    ignoreArgs: false,
+    
+    run: async (bot, msg, args, data) => {
         msg.channel.send('working')
     }
 }
