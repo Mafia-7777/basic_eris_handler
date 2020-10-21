@@ -17,7 +17,11 @@ module.exports = {
     cooldown: 1500,
 
     minArgs: 0,
-    maxArgs: 1,
+    ignoreMinArgs: true,
+
+    maxArgs: 0,
+    ignoreMaxArgs: true,
+
     ignoreArgs: false,
     
     run: async (bot, msg, args, data) => {
