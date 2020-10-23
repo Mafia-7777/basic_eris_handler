@@ -98,7 +98,7 @@ module.exports.msg = async (bot, msg) => {
 
     if(cmd.ignoreArgs == false){
         if(cmd.ignoreMinArgs == false && args.length - 1 < cmd.minArgs && args[0] == "") return msg.channel.sendErr(`Command args incorrect, \`\`\`  <prefix>${cmd.usage}  \`\`\` <> = required, [] = optional`)
-        if(cmd.ignoreMinArgs == false && args.length > cmd.maxArgs && !args[0] == "") return msg.channel.sendErr(`Command args incorrect, \`\`\`  <prefix>${cmd.usage}  \`\`\` <> = required, [] = optional`)
+        if(cmd.ignoreMaxArgs == false && args.length > cmd.maxArgs && !args[0] == "") return msg.channel.sendErr(`Command args incorrect, \`\`\`  <prefix>${cmd.usage}  \`\`\` <> = required, [] = optional`)
     }
     
     
